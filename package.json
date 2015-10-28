@@ -1,0 +1,29 @@
+{
+  "name": "fitbit-hapi-demo",
+  "version": "1.0.0",
+  "description": "Super quick and very dirty demo of using OAuth 2 and webhooks with Fitbit Web API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jeremiah Lee",
+  "license": "ISC",
+  "dependencies": {
+    "bell": "^5.4.0",
+    "hapi": "^11.0.0",
+    "jwt-simple": "^0.3.1",
+    "nedb": "^1.2.1",
+    "wreck": "^6.3.0",
+    "moment":"*",
+    "twit":"*",
+    "vision":"*",
+    "twilio":"*"
+  },
+  "engines": {
+    "node": "^4.2.1"
+  },
+  "repository":{
+    "type" : "git",
+    "url" : "https://github.com/jeremiahlee/fitbit-hapi-demo.git"
+  }
+}
