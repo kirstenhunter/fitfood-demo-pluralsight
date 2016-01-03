@@ -26,6 +26,7 @@ Set your OAuth redirect URI to:
 Set your subscriber endpoint URI to:
 <your modulus server here>/webhook-receiver
 
+## Set environment variables on Modulus
 Set the environment variables using the instructions at http://help.modulus.io/customer/portal/articles/1701180-using-environments-variables
 - FITBIT_OAUTH2_CLIENT_ID
 - FITBIT_OAUTH2_CLIENT_SECRET
