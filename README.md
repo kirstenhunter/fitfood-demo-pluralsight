@@ -31,12 +31,12 @@ Set the environment variables using the instructions at http://help.modulus.io/c
 - FITBIT_OAUTH2_CLIENT_SECRET
 - COOKIE_PASSWORD
 
-# Get a Twilio account from www.twilio.com, and set the following variables in modulus:
+## Get a Twilio account from www.twilio.com, and set the following variables in modulus:
 - TWILIOSID
 - TWILIOAUTHTOKEN
 - TWILIOPHONENUMBER
 
-# Set your phone number for SMS Messages
+## Set your phone number for SMS Messages
 - USERPHONENUMBER
 
 (PORT and CLOUD_DIR will be automatically added by Modulus)
