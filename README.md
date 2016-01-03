@@ -1,4 +1,4 @@
-This is a proof-of-concept example for tying several APIs together, based on Jeremiah Cohick's fitbit-hapi-demo.  It will be adapted to add libraries, and break out the code, but for now it is simply a walk-through of my demo at Full Stack London.
+This is a proof-of-concept example for tying several APIs together, based on Jeremiah Cohick's fitbit-hapi-demo.
 
 It uses:
 - Fitbit
