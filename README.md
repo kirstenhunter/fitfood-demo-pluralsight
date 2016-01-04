@@ -15,15 +15,15 @@ This example app uses NeDB, a flat-file database similar to Mongo. It's meant to
 This example assumes you're using Node.js 4.2.x
 
 # To run on Modulus:
-- Get a login from http://modulus.io
 - Download the modulus toolkit using `npm install -g modulus`
+- `modulus signup`
 - `modulus login` from the root directory of the repository
 - `modulus project create` to create a new project.  Name it as you wish.
 - `modulus deploy` from the root directory of the repository to deploy the code, which will give you your modulus server name.
 
-## Fitbit Web API client settings at https://dev.fitbit.com/apps
-
 ## Create a new application in Fitbit
+- Visit https://dev.fitbit.com/apps
+- Create a new application
 - Set your OAuth redirect URI to: your-modulus-server-here/signin
 - Set your subscriber endpoint URI to: your-modulus-server-here/webhook-receiver
 
