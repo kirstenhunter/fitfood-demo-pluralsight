@@ -19,13 +19,13 @@ This example assumes you're using Node.js 4.2.x
 - Download the modulus toolkit using `npm install -g modulus`
 - `modulus login` from the root directory of the repository
 - `modulus create` to create a new project.  Name it as you wish.
-- `modulus deploy` from the root directory of the repository to deploy the code.
+- `modulus deploy` from the root directory of the repository to deploy the code, which will give you your modulus server name.
 
 ## Fitbit Web API client settings at https://dev.fitbit.com/apps
 
 ## Create a new application in Fitbit
-- Set your OAuth redirect URI to: <your modulus server here>/signin
-- Set your subscriber endpoint URI to: <your modulus server here>/webhook-receiver
+- Set your OAuth redirect URI to: your-modulus-server-here/signin
+- Set your subscriber endpoint URI to: your-modulus-server-here/webhook-receiver
 
 ## Set environment variables on Modulus
 Set the environment variables using the instructions at http://help.modulus.io/customer/portal/articles/1701180-using-environments-variables
