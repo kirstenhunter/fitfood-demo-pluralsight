@@ -15,16 +15,17 @@ This example app uses NeDB, a flat-file database similar to Mongo. It's meant to
 This example assumes you're using Node.js 4.2.x
 
 # To run on Modulus:
-- Get a login and project from http://modulus.io
-- `modulus deploy` from the root directory of the repository
+- Get a login from http://modulus.io
+- Download the modulus toolkit using `npm install -g modulus`
+- `modulus login` from the root directory of the repository
+- `modulus create` to create a new project.  Name it as you wish.
+- `modulus deploy` from the root directory of the repository to deploy the code.
 
-## Fitbit Web API client settings at https://dev.fitbit.com/app
+## Fitbit Web API client settings at https://dev.fitbit.com/apps
 
-Set your OAuth redirect URI to:
-<your modulus server here>/signin
-
-Set your subscriber endpoint URI to:
-<your modulus server here>/webhook-receiver
+## Create a new application in Fitbit
+- Set your OAuth redirect URI to: <your modulus server here>/signin
+- Set your subscriber endpoint URI to: <your modulus server here>/webhook-receiver
 
 ## Set environment variables on Modulus
 Set the environment variables using the instructions at http://help.modulus.io/customer/portal/articles/1701180-using-environments-variables
@@ -37,7 +38,7 @@ Set the environment variables using the instructions at http://help.modulus.io/c
 - TWILIOAUTHTOKEN
 - TWILIOPHONENUMBER
 
-## Set your phone number for SMS Messages
+## Set your phone number for SMS Messages in Modulus
 - USERPHONENUMBER
 
 (PORT and CLOUD_DIR will be automatically added by Modulus)
