@@ -7,8 +7,6 @@ var Hapi = require('hapi'),
     vision = require('vision'),
     Twilio = require('twilio')(process.env.TWILIOSID, process.env.TWILIOAUTHTOKEN);
 
-    
-
 // Create a server with a host and port
 var server = new Hapi.Server({ debug: { request: ['error'] } });
 server.connection({ 
@@ -148,7 +146,7 @@ server.route({
         
         if (requestHash !== request.headers['x-fitbit-signature']) {
             return console.error('Invalid subscription notification received.');
-        }
+        };
         var stuff = JSON.parse(request.payload.toString());
         //console.log (stuff[0]);
         
@@ -156,6 +154,68 @@ server.route({
         setImmediate(processWebhookNotification, JSON.parse(request.payload.toString()));
     }
 });
+
+red = {
+    "on": true,
+    "bri": 99,
+    "hue": 65167,
+    "sat": 253,
+    "xy": [
+      0.6637,
+      0.3166
+    ],
+    "ct": 500,
+    "alert": "none",
+    "effect": "none",
+    "colormode": "xy",
+    "reachable": true
+  }
+yellow = {
+    "on": true,
+    "bri": 214,
+    "hue": 18669,
+    "sat": 241,
+    "xy": [
+      0.4759,
+      0.4604
+    ],
+    "ct": 396,
+    "alert": "none",
+    "effect": "none",
+    "colormode": "xy",
+    "reachable": true
+  }
+green = {
+    "on": true,
+    "bri": 168,
+    "hue": 25654,
+    "sat": 253,
+    "xy": [
+      0.4083,
+      0.5162
+    ],
+    "ct": 290,
+    "alert": "none",
+    "effect": "none",
+    "colormode": "xy",
+    "reachable": true
+  }
+orange = {
+      "on": true,
+      "bri": 163,
+      "hue": 4661,
+      "sat": 248,
+      "xy": [
+        0.6208,
+        0.3581
+      ],
+      "ct": 500,
+      "alert": "none",
+      "effect": "none",
+      "colormode": "xy",
+      "reachable": true
+    }
+
 
 function processWebhookNotification(notifications) {
     // Multiple notifications may be received in a request
@@ -167,9 +227,9 @@ function processWebhookNotification(notifications) {
         function(err, authCredentials) {
             console.log('Doing something with the credentials...', authCredentials);
             
-            foodpath = 'https://api.fitbit.com/1/user/-/foods/log/date/' + moment().utc().format('YYYY-MM-DD') + '.json';
-            activitypath = 'https://api.fitbit.com/1/user/-/activities/date/' + moment().utc().format('YYYY-MM-DD') + '.json';
-            sleeppath = 'https://api.fitbit.com/1/user/-/sleep/date/' + moment().utc().format('YYYY-MM-DD') + '.json';
+            foodpath = 'https://api.fitbit.com/1/user/-/foods/log/date/' + moment().subtract(5,'hours').format('YYYY-MM-DD') + '.json';
+            activitypath = 'https://api.fitbit.com/1/user/-/activities/date/' + moment().subtract(5,'hours').format('YYYY-MM-DD') + '.json';
+            sleeppath = 'https://api.fitbit.com/1/user/-/sleep/date/' + moment().subtract(5,'hours').format('YYYY-MM-DD') + '.json';
             console.log (foodpath);
             console.log (activitypath);
             function fitbit_oauth_getP(path, token) {
@@ -192,8 +252,7 @@ function processWebhookNotification(notifications) {
             })};
 
             Promise.all([fitbit_oauth_getP(foodpath, authCredentials.token), 
-                         fitbit_oauth_getP(activitypath, authCredentials.token),
-                         fitbit_oauth_getP(sleeppath, authCredentials.token)])
+                         fitbit_oauth_getP(activitypath, authCredentials.token)])
                          .then(function(arrayOfResults) {
                         console.log(arrayOfResults);
                         foodObject = arrayOfResults[0];
@@ -201,38 +260,15 @@ function processWebhookNotification(notifications) {
                         sleepObject = arrayOfResults[2];
 
                         // Check to see it's at least 9AM
-
-                        var sleepCheck = activityObject.summary.lightlyActiveMinutes +
-                                         activityObject.summary.sedentaryMinutes +
-                                         activityObject.summary.veryActiveMinutes +
-                                         activityObject.summary.fairlyActiveMinutes +
-                                         sleepObject.summary.totalMinutesAsleep;
-
-                        hours = sleepCheck / 54;
-                        console.log(hours + " hours since midnight");
-
-
-                        //if (hours < 9 || hours > 24) {
-                        //    return;
-                        //} else {
-                            //hours = hours-9;
-                            percentageCheck = hours * 8.25;
+			            hours = moment().subtract(5,'hours').format("H");
                         //}
-
-                        
-                        // Check to make sure we have a new number of steps
-                        if (authCredentials.profile.stepsToday == activityObject.summary.steps) {
-                            return;
-                        }
-
-                        // Update the user to set new steps and protein
+                        percentageCheck = (hours-5) * 8.25;
 
                         db.findOne({_id: notifications[0].ownerId}, function(err, doc) {
                             if (err) {
                                 throw new Error(err);
                             }
-                            doc.stepsToday = activityObject.summary.steps
-
+                            
                             db.update(
                                 {_id: doc._id}, // query
                                 doc, // update
@@ -246,21 +282,21 @@ function processWebhookNotification(notifications) {
 
                         // Get the todaySteps and todayProtein from the creds
                         // Set up the percentages for checking
-                        var stepsPercentage = activityObject.summary.steps / activityObject.goals.steps * 100;
+                        var caloriePercentage = activityObject.summary.caloriesOut / activityObject.goals.caloriesOut * 100;
                         var proteinPercentage = foodObject.summary.protein / 80 * 100;
-                        console.log("Steps percentage: " + stepsPercentage);
+                        console.log("Calorie percentage: " + caloriePercentage);
                         console.log("Protein percentage: " + proteinPercentage);
                         console.log("Percentage check: " + percentageCheck);
-                        console.log ("Today's steps: " + activityObject.summary.steps);
-                        console.log("Goal steps: " + activityObject.goals.steps);
+                        console.log ("Today's calories: " + activityObject.summary.caloriesOut);
+                        console.log("Goal calories: " + activityObject.goals.caloriesOut);
                         console.log("Protein today: " + foodObject.summary.protein);
 
                         
-                        // Send an SMS via twilio if either the steps or protein are lagging
+                        // Send an SMS via twilio if either the calories or protein are lagging
                         var smsBody = '';
-                        if (stepsPercentage < percentageCheck) {
-                            var stepsRemaining = activityObject.goals.steps - activityObject.summary.steps;
-                            smsBody += 'Get Moving! ' + stepsRemaining + ' steps to go today. ' + stepsPercentage + '% of the way there!\n';
+                        if (caloriePercentage < percentageCheck) {
+                            var calorieRemaining = activityObject.goals.caloriesOut - activityObject.summary.caloriesOut;
+                            smsBody += 'Get Moving! ' + calorieRemaining + ' calories to go today. ' + caloriePercentage + '% of the way there!\n';
                         }
 
                         if (proteinPercentage < percentageCheck) {
@@ -275,33 +311,37 @@ function processWebhookNotification(notifications) {
 
                         console.log("Fitbit Got Activities and Food");
                         
-                        var totalPercentage = (proteinPercentage + stepsPercentage) / 2;
+                        var totalPercentage = (proteinPercentage + caloriePercentage) / 2;
                         var currentTime = new Date();
                         var seconds = currentTime.getTime();
                         if (totalPercentage < 25) {
-                            twitstring = 'synedra0 ' + seconds;
+                            hueobject = red; 
                         } else if (totalPercentage < 50) {
-                            twitstring = 'synedra1 ' + seconds;
+                            hueobject = orange;
                         } else if (totalPercentage < 75) {
-                            twitstring = 'synedra2 ' + seconds;
+                            hueobject = yellow;
                         }  else {
-                            twitstring = 'synedra3 ' + seconds;
+			                hueobject = green;
                         }
-                        console.log("Twitstring: " + twitstring);
-
-                        var Twitter = require('twit');
-                        var twitter = new Twitter({
-                            consumer_key: process.env.TWITTER_CON_KEY,
-                            consumer_secret: process.env.TWITTER_CON_SECRET,
-                            access_token: process.env.TWITTER_ACC_TOKEN,
-                            access_token_secret: process.env.TWITTER_ACC_SECRET
-                        });
-                        twitter.post('statuses/update', { status: twitstring }, function(err, data, response) {
-                            console.log(data);
-                        });
-            });
-        }
-    );
+                        payloadcontent = 'clipmessage=' + JSON.stringify({"bridgeId":"001788FFFE14C349", "clipCommand": { "url": "/api/0/groups/0/action", "method": "PUT" , "body": hueobject}});
+                        console.log(payloadcontent);
+    			        Wreck.post('https://www.meethue.com/api/sendmessage?token=RWhXZVlESENwR1pHZmpZWnQvNW9zejRSZDhjbEVjSFJrcnRweGNIM2VLQT0=',
+                	       {
+                    		headers: {
+                        		'Content-Type': 'application/x-www-form-urlencoded'
+                    		},
+                    		payload: payloadcontent
+                	       },		
+                			function(err, response, payload) {
+                				if (err) {
+                					throw new Error(err);
+                				};
+                				console.log(JSON.stringify(payload));
+                			});
+	                    
+                     });
+}
+);
 }
 
 // Fitbit Web API OAuth 2.0 access tokens expire frequently and must be refreshed
