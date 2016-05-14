@@ -321,11 +321,11 @@ function processWebhookNotification(notifications) {
                         } else if (totalPercentage < 75) {
                             hueobject = yellow;
                         }  else {
-			                hueobject = green;
+			    hueobject = green;
                         }
-                        payloadcontent = 'clipmessage=' + JSON.stringify({"bridgeId":"001788FFFE14C349", "clipCommand": { "url": "/api/0/groups/0/action", "method": "PUT" , "body": hueobject}});
+                        payloadcontent = 'clipmessage=' + JSON.stringify({"bridgeId":process.env.HUE_BRIDGE_ID, "clipCommand": { "url": "/api/0/groups/0/action", "method": "PUT" , "body": hueobject}}, null, 4);
                         console.log(payloadcontent);
-    			        Wreck.post('https://www.meethue.com/api/sendmessage?token=RWhXZVlESENwR1pHZmpZWnQvNW9zejRSZDhjbEVjSFJrcnRweGNIM2VLQT0=',
+    			        Wreck.post('https://www.meethue.com/api/sendmessage?token=' + process.env.HUE_TOKEN,
                 	       {
                     		headers: {
                         		'Content-Type': 'application/x-www-form-urlencoded'
